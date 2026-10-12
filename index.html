@@ -1,0 +1,193 @@
+<!doctype html>
+<!-- Copyright (c) 2026 Luc Anézo (tokenscalpel@proton.me). All Rights Reserved. -->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TokenScalpel et DoubtScalpel</title>
+<meta name="description" content="Deux outils en construction pour rendre l'IA moins chère et plus fiable : TokenScalpel (contexte réduit) et DoubtScalpel (l'IA se tait quand elle n'est pas sûre).">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --card: #ffffff;
+    --text: #1c1b19;
+    --muted: #5d5a54;
+    --line: #e4e1da;
+    --accent: #1f5f4a;
+    --accent-soft: #e3f0ea;
+    --warn-soft: #f7efdc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #161614;
+      --card: #1f1f1c;
+      --text: #efede7;
+      --muted: #a9a59b;
+      --line: #34332e;
+      --accent: #6cc4a3;
+      --accent-soft: #1d2d27;
+      --warn-soft: #2b2619;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px 56px; }
+  header { padding: 40px 0 8px; }
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 999px;
+    background: var(--warn-soft); font-size: 13px; color: var(--muted);
+  }
+  .lang button {
+    font: inherit; font-size: 14px; padding: 4px 12px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--card); color: var(--text); cursor: pointer;
+  }
+  .lang button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+  h1 { font-size: 34px; line-height: 1.15; margin: 20px 0 10px; letter-spacing: -0.01em; }
+  h2 { font-size: 22px; margin: 40px 0 10px; }
+  h3 { font-size: 18px; margin: 0 0 6px; }
+  p { margin: 0 0 12px; }
+  .lead { font-size: 19px; color: var(--muted); }
+  .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px;
+  }
+  .card .tag { font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+  a { color: var(--accent); }
+  ul { margin: 8px 0 0; padding-left: 20px; }
+  li { margin-bottom: 6px; }
+  .nums { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; margin-top: 12px; }
+  @media (min-width: 640px) { .nums { grid-template-columns: repeat(4, 1fr); } }
+  .num { background: var(--accent-soft); border-radius: 12px; padding: 14px; }
+  .num b { display: block; font-size: 24px; color: var(--accent); line-height: 1.1; }
+  .num span { font-size: 14px; color: var(--muted); }
+  .honest { background: var(--warn-soft); border-radius: 14px; padding: 18px 20px; }
+  footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+  [data-l="en"] { display: none; }
+  html[data-lang="en"] [data-l="fr"] { display: none; }
+  html[data-lang="en"] [data-l="en"] { display: revert; }
+  html[data-lang="en"] span[data-l="en"], html[data-lang="en"] b[data-l="en"] { display: inline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="top">
+    <span class="badge"><span data-l="fr">Projets en construction</span><span data-l="en">Work in progress</span></span>
+    <div class="lang" role="group" aria-label="Langue / Language">
+      <button type="button" id="b-fr" aria-pressed="true">FR</button>
+      <button type="button" id="b-en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+  <h1>
+    <span data-l="fr">Rendre l'IA moins chère et plus fiable</span>
+    <span data-l="en">Making AI cheaper and more reliable</span>
+  </h1>
+  <p class="lead" data-l="fr">Deux outils : l'un envoie à l'IA seulement ce dont elle a besoin, l'autre la fait se taire quand elle n'est pas sûre.</p>
+  <p class="lead" data-l="en">Two tools: one sends the AI only what it needs, the other makes it stay quiet when it is not sure.</p>
+</header>
+
+<main>
+
+<h2><span data-l="fr">Les deux projets</span><span data-l="en">The two projects</span></h2>
+<div class="grid">
+
+  <section class="card">
+    <div class="tag">TokenScalpel</div>
+    <h3 data-l="fr">Un contexte réduit, sans perdre la précision</h3>
+    <h3 data-l="en">A reduced context, without losing accuracy</h3>
+    <p data-l="fr">Moteur local : il lit la demande, dans les mots de l'utilisateur, retrouve les fonctions et blocs de code utiles d'un gros projet, et n'envoie à l'IA que ce paquet. Il tourne avec un petit modèle Qwen sous licence ouverte (Apache 2.0) et fonctionne avec n'importe quelle IA. Il est déjà branché dans Claude Code et Claude Desktop par MCP.</p>
+    <p data-l="en">A local engine: it reads the request in the user's own words, finds the relevant functions and code blocks of a large project, and sends the AI only that bundle. It runs with a small open-licence Qwen model (Apache 2.0) and works with any AI. It is already plugged into Claude Code and Claude Desktop through MCP.</p>
+    <p data-l="fr"><b>Pour qui :</b> les utilisateurs de gros projets et les fournisseurs de modèles ou de cloud, qui peuvent réduire les jetons et le calcul traités par réponse.</p>
+    <p data-l="en"><b>Who it is for:</b> users of large projects, and model or cloud providers, who can cut the tokens and compute they process per answer.</p>
+  </section>
+
+  <section class="card">
+    <div class="tag">DoubtScalpel <span style="color:var(--muted);font-weight:400">(<span data-l="fr">nom provisoire</span><span data-l="en">working name</span>)</span></div>
+    <h3 data-l="fr">Une IA qui se tait quand elle n'est pas sûre</h3>
+    <h3 data-l="en">An AI that stays quiet when it is not sure</h3>
+    <p data-l="fr">Une couche de fiabilité autour d'un modèle de langage :</p>
+    <p data-l="en">A reliability layer around a language model:</p>
+    <ul data-l="fr">
+      <li>elle s'abstient quand le doute est grand (mesuré par la probabilité des mots de la réponse) ;</li>
+      <li>elle utilise des outils pour ce qui se calcule : calculatrice, code, dates ;</li>
+      <li>elle ne fige jamais l'actualité ;</li>
+      <li>elle corrige par deux sources, se garde des fausses ressemblances et tient bon sous la pression.</li>
+    </ul>
+    <ul data-l="en">
+      <li>it abstains when doubt is high (measured by the probability of the answer's words);</li>
+      <li>it uses tools for anything computable: calculator, code, dates;</li>
+      <li>it never freezes news;</li>
+      <li>it corrects through two sources, guards against false resemblances and holds firm under pressure.</li>
+    </ul>
+  </section>
+
+</div>
+
+<h2><span data-l="fr">Ce qui est mesuré</span><span data-l="en">What is measured</span></h2>
+<p data-l="fr">Principe commun : la précision passe avant l'économie. Dans le doute, l'outil ne change rien. Les plans et les seuils des essais sont scellés avant les données, avec une preuve de date (RFC 3161).</p>
+<p data-l="en">Shared principle: accuracy before savings. When in doubt, the tool changes nothing. The plans and thresholds of each experiment are sealed before the data, with a date proof (RFC 3161).</p>
+
+<div class="nums">
+  <div class="num"><b data-l="fr">1,5 – 3×</b><b data-l="en">1.5 – 3×</b><span data-l="fr">moins de jetons qu'un RAG, pour une qualité égale (TokenScalpel)</span><span data-l="en">fewer tokens than a RAG at equal quality (TokenScalpel)</span></div>
+  <div class="num"><b>27 / 54</b><span data-l="fr">réponses justes en français, contre 11 pour un RAG lexical (TokenScalpel)</span><span data-l="en">correct answers in French, against 11 for a lexical RAG (TokenScalpel)</span></div>
+  <div class="num"><b>73 → 95 %</b><span data-l="fr">mathématiques avec des outils : 72,7 % puis 94,7 % (DoubtScalpel)</span><span data-l="en">maths with tools: 72.7% then 94.7% (DoubtScalpel)</span></div>
+  <div class="num"><b>16 → 100 %</b><span data-l="fr">code avec des outils ; dates à 99 % (DoubtScalpel)</span><span data-l="en">code with tools; dates at 99% (DoubtScalpel)</span></div>
+</div>
+
+<h2><span data-l="fr">Les résultats négatifs, publiés tels quels</span><span data-l="en">Negative results, published as they are</span></h2>
+<div class="honest">
+  <ul data-l="fr">
+    <li>TokenScalpel n'est pas démontré meilleur qu'un RAG par embeddings. Sur l'usage quotidien de Claude Code, il agit sur une petite part des jetons ; son intérêt est pour les fournisseurs, les petits modèles et les gros projets.</li>
+    <li>Un débat entre IA à 5 appels s'est montré significativement moins bon que Sonnet seul (357 questions, 6 configurations). Il s'abstient trop et abandonne 39 à 42 % des réponses justes. Cela ne vaut que pour cette configuration.</li>
+    <li>Une mémoire par simple ressemblance est dangereuse sur les nombres ; les demandes se répètent peu (au plus 6 à 9 % des demandes courtes).</li>
+  </ul>
+  <ul data-l="en">
+    <li>TokenScalpel is not shown to beat an embeddings RAG. In everyday Claude Code use it acts on a small share of tokens; its value is for providers, small models and large projects.</li>
+    <li>A 5-call AI debate was significantly worse than Sonnet alone (357 questions, 6 configurations). It abstains too often and drops 39 to 42% of correct answers. This holds for that configuration only.</li>
+    <li>A memory based on mere similarity is dangerous on numbers; requests rarely repeat (at most 6 to 9% of short requests).</li>
+  </ul>
+</div>
+<p style="margin-top:14px;color:var(--muted);font-size:15px" data-l="fr">Pas encore mesuré : le doute et le code en français, les demandes contextuelles, l'actualité réelle, et toute évaluation par un tiers.</p>
+<p style="margin-top:14px;color:var(--muted);font-size:15px" data-l="en">Not measured yet: doubt and code in French, contextual requests, real-world news, and any third-party evaluation.</p>
+
+<h2><span data-l="fr">Contact</span><span data-l="en">Contact</span></h2>
+<p>Luc Anézo, TokenScalpel — <a href="mailto:tokenscalpel@proton.me">tokenscalpel@proton.me</a></p>
+
+</main>
+
+<footer>
+  <span data-l="fr">© 2026 Luc Anézo. Tous droits réservés. Page en construction : les chiffres sont ceux de nos propres essais, sans évaluation par un tiers.</span>
+  <span data-l="en">© 2026 Luc Anézo. All rights reserved. Work in progress: the figures come from our own experiments, with no third-party evaluation.</span>
+</footer>
+
+</div>
+<script>
+  (function () {
+    var root = document.documentElement;
+    var bFr = document.getElementById('b-fr');
+    var bEn = document.getElementById('b-en');
+    function set(l) {
+      root.setAttribute('data-lang', l);
+      root.lang = l;
+      bFr.setAttribute('aria-pressed', l === 'fr');
+      bEn.setAttribute('aria-pressed', l === 'en');
+      try { localStorage.setItem('lang', l); } catch (e) {}
+    }
+    bFr.onclick = function () { set('fr'); };
+    bEn.onclick = function () { set('en'); };
+    var l = (navigator.language || 'fr').slice(0, 2) === 'en' ? 'en' : 'fr';
+    try { l = localStorage.getItem('lang') || l; } catch (e) {}
+    set(l);
+  })();
+</script>
+</body>
+</html>
